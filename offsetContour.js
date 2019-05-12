@@ -7,7 +7,7 @@
 function createContour()
 {
 	var n = 3;
-	var ofsset = -3;
+	var ofsset = -10;
 	
 	var contour1 = [
 		new THREE.Vector2(0 * n + ofsset, 0 * n),
@@ -24,7 +24,7 @@ function createContour()
 		console.log(points);
 		let geom = new THREE.BufferGeometry().setFromPoints(points);
 		geom.rotateX(-Math.PI * 0.5);
-		let line = new THREE.LineLoop(geom, new THREE.LineBasicMaterial({color: 0x777777 + Math.random() * 0x777777}));
+		let line = new THREE.LineLoop(geom, new THREE.LineBasicMaterial({color: 0x777777 + i * 0x777777}));
 		scene.add(line);
 	}	
 }
@@ -37,9 +37,9 @@ function OffsetContour(offset, contour)
 {
 
 	let result = [];
-
+console.log("offset", offset);
 	offset = new THREE.BufferAttribute(new Float32Array([offset, 0, 0]), 3);
-	//console.log("offset", offset);
+	
 	
 	var i = 0;
 		let v1 = new THREE.Vector2().subVectors(contour[i - 1 < 0 ? contour.length - 1 : i - 1], contour[i]);
@@ -79,11 +79,12 @@ console.log("angle", Math.PI/4, v2.angle(), v1.angle(), v2.angle() - v1.angle())
 			0,                    0, 0, 1
 		);
 
-		let translationMatrix = new THREE.Matrix4().set(
-		1, 0, 0, contour[i].x,
-		0, 1, 0, contour[i].y,
-		0, 0, 1, 0,
-		0, 0, 0, 1,
+		let translationMatrix = new THREE.Matrix4().set
+		(
+			1, 0, 0, contour[i].x,
+			0, 1, 0, contour[i].y,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
 		);
 
 		let cloneOffset = offset.clone();

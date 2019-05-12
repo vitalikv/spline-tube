@@ -130,7 +130,7 @@ console.log(pipeSpline);
 				new THREE.Vector3( 0, 0, -7 ),
 			);
 
-			var points = curve.getPoints(  );
+			var points = curve.getPoints(  ); 
 			var geometry = new THREE.BufferGeometry().setFromPoints( points );
 
 			var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
@@ -139,6 +139,17 @@ console.log(pipeSpline);
 			var curveObject = new THREE.Line( geometry, material );			
 			
 			scene.add( curveObject );
+			
+		var pipeSpline2 = new THREE.CatmullRomCurve3(points);
+
+pipeSpline.curveType = 'catmullrom';
+pipeSpline.tension = 0;			
+
+			
+
+			var tubeGeometry = new THREE.TubeBufferGeometry( pipeSpline2, params.extrusionSegments, 0.3, params.radiusSegments, params.closed );
+
+			var mesh1 = new THREE.Mesh( tubeGeometry, material );	scene.add( mesh1 );					
 		}
 		
 		
