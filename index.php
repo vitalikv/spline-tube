@@ -32,7 +32,7 @@
 
 		<!-- where curves formulas are defined -->
 
-		<script src="js/CurveExtras.js"></script>
+		
 
 		<script src="js/stats.min.js"></script>
 		<script src="js/dat.gui.min.js"></script>
@@ -50,7 +50,7 @@
 		var binormal = new THREE.Vector3();
 		var normal = new THREE.Vector3();
 
-		var pipeSpline = new THREE.CatmullRomCurve3( [
+		var points = [
 			new THREE.Vector3( 0, 0, 0 ), 
 			new THREE.Vector3( 2, 0, 0 ),
 			new THREE.Vector3( 2, 0, 3 ), 
@@ -59,9 +59,12 @@
 			new THREE.Vector3( 9, 0, 0 ),
 			new THREE.Vector3( 12, 2, 3 ), 
 			new THREE.Vector3( 14, 0, 3 ),
-		] );
+		];
 
-
+		var pipeSpline = new THREE.CatmullRomCurve3(points);
+pipeSpline.curveType = 'catmullrom';
+pipeSpline.tension = 0;
+console.log(pipeSpline);
 
 		var parent, tubeGeometry, mesh;
 
@@ -133,14 +136,13 @@
 			var points = curve.getPoints(  ); 
 			
 			var points = [
-				new THREE.Vector2( -10, 0 ),
-				new THREE.Vector2( -5, 5 ),
-				new THREE.Vector2( 0, 0 ),
-				new THREE.Vector2( 5, -5 ),
-				new THREE.Vector2( 10, 0 )
+				new THREE.Vector3( -10, 0, 0 ),
+				new THREE.Vector3( -5, 0, 5 ),
+				new THREE.Vector3( 5, 0, -5 ),
+				new THREE.Vector3( 10, 0, 0 )
 			];			
 			
-			var geometry = new THREE.BufferGeometry().setFromPoints( points );
+			var geometry = new THREE.BufferGeometry().setFromPoints( points );  
 
 			var material = new THREE.LineBasicMaterial( { color : 0x000000 } );
 
@@ -148,6 +150,62 @@
 			var splineObject = new THREE.Line( geometry, material );			
 			
 			scene.add( splineObject );
+			
+			
+			var circle = createSpline_2();
+			var shape = new THREE.Shape( circle );
+			var mat = new THREE.MeshLambertMaterial( { color : 0xff00ff, side : THREE.DoubleSide } );
+			
+			for ( var i = 0; i < points.length - 1; i++ )
+			{
+				var dist = points[i].distanceTo( points[i+1] );
+				
+				var tube = new THREE.Mesh( new THREE.ExtrudeGeometry( shape, { bevelEnabled: false, depth: dist } ), mat );	
+
+				tube.position.copy( points[i] );
+				
+				scene.add( tube );
+			}
+	
+		}
+		
+
+		
+		
+		function createSpline_2()
+		{
+			
+			var points = createCircleSpline();	
+
+
+			function createCircleSpline()
+			{
+				var count = 48;
+				var circle = [];
+				var g = (Math.PI * 2) / count;
+				
+				for ( var i = 0; i < count; i++ )
+				{
+					var angle = g * i;
+					circle[i] = new THREE.Vector3();
+					circle[i].x = Math.sin(angle);
+					circle[i].y = Math.cos(angle);
+					//circle[i].y = 0;
+				}
+
+				return circle;
+			}			
+			
+			var geometry = new THREE.BufferGeometry().setFromPoints( points );  
+
+			var material = new THREE.LineBasicMaterial( { color : 0x000000 } );
+
+			// Create the final object to add to the scene
+			var splineObject = new THREE.Line( geometry, material );			
+			
+			scene.add( splineObject );
+			
+			return points;
 		}
 		
 
