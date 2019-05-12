@@ -6,13 +6,16 @@
 
 function createContour()
 {
+	var n = 3;
+	var ofsset = -3;
+	
 	var contour1 = [
-		new THREE.Vector2(0, 0),
-		new THREE.Vector2(1, 1),
-		new THREE.Vector2(2, 1),
-		new THREE.Vector2(2, 0),
-		new THREE.Vector2(1, -1),
-		new THREE.Vector2(1, 0)
+		new THREE.Vector2(0 * n + ofsset, 0 * n),
+		new THREE.Vector2(1 * n + ofsset, 1 * n),
+		new THREE.Vector2(2 * n + ofsset, 1 * n),
+		new THREE.Vector2(2 * n + ofsset, 0 * n),
+		new THREE.Vector2(1 * n + ofsset, -1 * n),
+		new THREE.Vector2(1 * n + ofsset, 0 * n)
 	];
 
 	for (let i = 0; i < 6; i++)
@@ -27,6 +30,8 @@ function createContour()
 }
 
 
+// https://stackoverflow.com/questions/50957349/threejs-how-to-offset-all-points-on-a-2d-geometry-by-distance
+// https://discourse.threejs.org/t/offsetcontour-function/3185?u=prisoner849
 
 function OffsetContour(offset, contour) 
 {
@@ -34,7 +39,16 @@ function OffsetContour(offset, contour)
 	let result = [];
 
 	offset = new THREE.BufferAttribute(new Float32Array([offset, 0, 0]), 3);
-	console.log("offset", offset);
+	//console.log("offset", offset);
+	
+	var i = 0;
+		let v1 = new THREE.Vector2().subVectors(contour[i - 1 < 0 ? contour.length - 1 : i - 1], contour[i]);
+		let v2 = new THREE.Vector2().subVectors(contour[i + 1 == contour.length ? 0 : i + 1], contour[i]);	
+		
+console.log("contour.length", contour.length, i - 1 < 0 ? contour.length - 1 : i - 1, i);
+console.log("contour.length", contour.length, i + 1 == contour.length ? 0 : i + 1, i);
+console.log("angle", Math.PI/4, v2.angle(), v1.angle(), v2.angle() - v1.angle());
+
 
 	for (let i = 0; i < contour.length; i++) 
 	{
@@ -73,7 +87,7 @@ function OffsetContour(offset, contour)
 		);
 
 		let cloneOffset = offset.clone();
-		console.log("cloneOffset", cloneOffset);
+		//console.log("cloneOffset", cloneOffset);
 		shiftMatrix.applyToBufferAttribute(cloneOffset);
 		rotationMatrix.applyToBufferAttribute(cloneOffset);
 		translationMatrix.applyToBufferAttribute(cloneOffset);
