@@ -29,7 +29,7 @@
 
 		<script src="js/three.min.js"></script>
 		<script src="js/OrbitControls.js"></script>
-
+		<script src="offsetContour.js"></script>
 		<!-- where curves formulas are defined -->
 
 		
@@ -51,14 +51,14 @@
 		var normal = new THREE.Vector3();
 
 		var points = [
-			new THREE.Vector3( 0, 0, 0 ), 
-			new THREE.Vector3( 2, 0, 0 ),
-			new THREE.Vector3( 2, 0, 3 ), 
-			new THREE.Vector3( 4, 0, 3 ),
-			new THREE.Vector3( 7, 0, 3 ), 
-			new THREE.Vector3( 9, 0, 0 ),
-			new THREE.Vector3( 12, 2, 3 ), 
-			new THREE.Vector3( 14, 0, 3 ),
+			new THREE.Vector3( 5+0, 0, 0 ), 
+			new THREE.Vector3( 5+2, 0, 0 ),
+			new THREE.Vector3( 5+2, 0, 3 ), 
+			new THREE.Vector3( 5+4, 0, 3 ),
+			new THREE.Vector3( 5+7, 0, 3 ), 
+			new THREE.Vector3( 5+9, 0, 0 ),
+			new THREE.Vector3( 5+12, 2, 3 ), 
+			new THREE.Vector3( 5+14, 0, 3 ),
 		];
 
 		var pipeSpline = new THREE.CatmullRomCurve3(points);
@@ -119,8 +119,32 @@ console.log(pipeSpline);
 
 		}
 		
+		wallBezierCurve();
 		
-		createSpline();
+		function wallBezierCurve()
+		{
+			
+			var curve = new THREE.QuadraticBezierCurve3(
+				new THREE.Vector3( -10, 0, -7 ),
+				new THREE.Vector3( -5, 0, 1 ),
+				new THREE.Vector3( 0, 0, -7 ),
+			);
+
+			var points = curve.getPoints(  );
+			var geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+			var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+
+			// Create the final object to add to the scene
+			var curveObject = new THREE.Line( geometry, material );			
+			
+			scene.add( curveObject );
+		}
+		
+		
+		createContour();
+		
+		//createSpline();
 		
 		function createSpline()
 		{
