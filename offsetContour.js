@@ -1,7 +1,7 @@
 
 
 
-createContour();
+//createContour();
 
 
 function createContour()
