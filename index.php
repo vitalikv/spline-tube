@@ -29,9 +29,6 @@
 
 		<script src="js/three.min.js"></script>
 		<script src="js/OrbitControls.js"></script>
-		<script src="offsetContour.js"></script>
-		
-
 		
 
 		<script src="js/stats.min.js"></script>
@@ -62,9 +59,9 @@
 		];
 
 		var pipeSpline = new THREE.CatmullRomCurve3(points);
-pipeSpline.curveType = 'catmullrom';
-pipeSpline.tension = 0;
-console.log(pipeSpline);
+		pipeSpline.curveType = 'catmullrom';
+		pipeSpline.tension = 0;
+		console.log(pipeSpline);
 
 		var parent, tubeGeometry, mesh;
 
@@ -119,130 +116,7 @@ console.log(pipeSpline);
 
 		}
 		
-		wallBezierCurve();
-		
-		function wallBezierCurve()
-		{
-			
-			var curve = new THREE.QuadraticBezierCurve3(
-				new THREE.Vector3( -10, 0, -7 ),
-				new THREE.Vector3( -5, 0, 1 ),
-				new THREE.Vector3( 0, 0, -7 ),
-			);
 
-			var points = curve.getPoints(  ); 
-			var geometry = new THREE.BufferGeometry().setFromPoints( points );
-
-			var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
-
-			// Create the final object to add to the scene
-			var curveObject = new THREE.Line( geometry, material );			
-			
-			scene.add( curveObject );
-			
-		var pipeSpline2 = new THREE.CatmullRomCurve3(points);
-
-pipeSpline.curveType = 'catmullrom';
-pipeSpline.tension = 0;			
-
-			
-
-			var tubeGeometry = new THREE.TubeBufferGeometry( pipeSpline2, params.extrusionSegments, 0.3, params.radiusSegments, params.closed );
-
-			var mesh1 = new THREE.Mesh( tubeGeometry, material );	scene.add( mesh1 );					
-		}
-		
-		
-		createContour();
-		
-		//createSpline();
-		
-		function createSpline()
-		{
-			
-			var curve = new THREE.SplineCurve( [
-				new THREE.Vector2( -10, 0 ),
-				new THREE.Vector2( -5, 5 ),
-				new THREE.Vector2( 0, 0 ),
-				new THREE.Vector2( 5, -5 ),
-				new THREE.Vector2( 10, 0 )
-			] );
-
-			var points = curve.getPoints(  ); 
-			
-			var points = [
-				new THREE.Vector3( -10, 0, 0 ),
-				new THREE.Vector3( -5, 0, 5 ),
-				new THREE.Vector3( 5, 0, -5 ),
-				new THREE.Vector3( 10, 0, 0 )
-			];			
-			
-			var geometry = new THREE.BufferGeometry().setFromPoints( points );  
-
-			var material = new THREE.LineBasicMaterial( { color : 0x000000 } );
-
-			// Create the final object to add to the scene
-			var splineObject = new THREE.Line( geometry, material );			
-			
-			scene.add( splineObject );
-			
-			
-			var circle = createSpline_2();
-			var shape = new THREE.Shape( circle );
-			var mat = new THREE.MeshLambertMaterial( { color : 0xff00ff, side : THREE.DoubleSide } );
-			
-			for ( var i = 0; i < points.length - 1; i++ )
-			{
-				var dist = points[i].distanceTo( points[i+1] );
-				
-				var tube = new THREE.Mesh( new THREE.ExtrudeGeometry( shape, { bevelEnabled: false, depth: dist } ), mat );	
-
-				tube.position.copy( points[i] );
-				
-				scene.add( tube );
-			}
-	
-		}
-		
-
-		
-		
-		function createSpline_2()
-		{
-			
-			var points = createCircleSpline();	
-
-
-			function createCircleSpline()
-			{
-				var count = 48;
-				var circle = [];
-				var g = (Math.PI * 2) / count;
-				
-				for ( var i = 0; i < count; i++ )
-				{
-					var angle = g * i;
-					circle[i] = new THREE.Vector3();
-					circle[i].x = Math.sin(angle);
-					circle[i].y = Math.cos(angle);
-					//circle[i].y = 0;
-				}
-
-				return circle;
-			}			
-			
-			var geometry = new THREE.BufferGeometry().setFromPoints( points );  
-
-			var material = new THREE.LineBasicMaterial( { color : 0x000000 } );
-
-			// Create the final object to add to the scene
-			var splineObject = new THREE.Line( geometry, material );			
-			
-			scene.add( splineObject );
-			
-			return points;
-		}
-		
 
 		init();
 		animate();
@@ -427,6 +301,9 @@ pipeSpline.tension = 0;
 	<script src="js/ThreeCSG.js"></script> 
 	<script src="terrianAB.js"></script>
 	<?}?>
+	
+	<script src="tube.js"></script>
+	<script src="offsetContour.js"></script>
 	
 	</body>
 </html>
