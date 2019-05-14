@@ -30,7 +30,7 @@
 		<script src="js/three.min.js"></script>
 		<script src="js/OrbitControls.js"></script>
 		<script src="offsetContour.js"></script>
-		<!-- where curves formulas are defined -->
+		
 
 		
 
@@ -422,5 +422,11 @@ pipeSpline.tension = 0;
 		}
 
 	</script>
+	
+	<?if(1==2){?>
+	<script src="js/ThreeCSG.js"></script> 
+	<script src="terrianAB.js"></script>
+	<?}?>
+	
 	</body>
 </html>
