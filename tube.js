@@ -110,6 +110,8 @@ function getPointLineOffset_1(offset, contour)
 
 	var result = [];
 
+	var milty = offset * -1;
+	
 	offset = new THREE.BufferAttribute(new Float32Array([offset, 0, 0]), 3);
 
 
@@ -117,16 +119,35 @@ function getPointLineOffset_1(offset, contour)
 	{
 		var v1 = new THREE.Vector2().subVectors(contour[i - 1 < 0 ? contour.length - 1 : i - 1], contour[i]);
 		var v2 = new THREE.Vector2().subVectors(contour[i + 1 == contour.length ? 0 : i + 1], contour[i]);
-
+		
+		
 		if(i == 0)
 		{			
-			result.push(new THREE.Vector3(contour[i].x, 0, contour[i].y)); 			
+			var v1 = new THREE.Vector2( contour[i + 1].x - contour[i].x, contour[i + 1].y - contour[i].y );
+			v1 = new THREE.Vector2( v1.y, -v1.x ).normalize();
+			
+			v1.x *= milty;
+			v1.y *= milty;
+			
+			v1.x += contour[i].x;
+			v1.y += contour[i].y;				
+	
+			result.push(new THREE.Vector3(v1.x, 0, v1.y)); 			
 			continue;
 		}
 
 		if(i == contour.length - 1)
 		{
-			result.push(new THREE.Vector3(contour[i].x, 0, contour[i].y));
+			var v1 = new THREE.Vector2( contour[i].x - contour[i - 1].x, contour[i].y - contour[i - 1].y );
+			v1 = new THREE.Vector2( v1.y, -v1.x ).normalize();
+			
+			v1.x *= milty;
+			v1.y *= milty;
+			
+			v1.x += contour[i].x;
+			v1.y += contour[i].y;	
+	
+			result.push(new THREE.Vector3(v1.x, 0, v1.y)); 
 			continue;
 		}			
 		
