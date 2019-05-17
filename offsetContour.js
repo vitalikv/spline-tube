@@ -18,13 +18,13 @@ function createContour()
 		new THREE.Vector2(1 * n + ofsset, 0 * n)
 	];
 
-	for (let i = 0; i < 6; i++)
+	for (var i = 0; i < 6; i++)
 	{
-		let points = OffsetContour(i * -0.1, contour1);
+		var points = OffsetContour(i * -0.1, contour1);
 		console.log(points);
-		let geom = new THREE.BufferGeometry().setFromPoints(points);
+		var geom = new THREE.BufferGeometry().setFromPoints(points);
 		geom.rotateX(-Math.PI * 0.5);
-		let line = new THREE.LineLoop(geom, new THREE.LineBasicMaterial({color: 0x777777 + i * 0x777777}));
+		var line = new THREE.LineLoop(geom, new THREE.LineBasicMaterial({color: 0x777777 + i * 0x777777}));
 		scene.add(line);
 	}	
 }

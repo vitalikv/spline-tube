@@ -16,7 +16,7 @@ function pathBezierCurve()
 		new THREE.Vector3( 0, 0, -7 ),
 	);
 
-	var points = curve.getPoints(  ); 
+	var points = curve.getPoints( 40 ); 
 	var geometry = new THREE.BufferGeometry().setFromPoints( points );
 
 	var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
@@ -34,7 +34,7 @@ function pathBezierCurve()
 }
 
 
-// создаем линии
+// создаем паралельные линии, со смещение от основной линии
 function drawLineOffset_1(points)
 {
 	var path = [];
@@ -44,15 +44,45 @@ function drawLineOffset_1(points)
 		path[i] = new THREE.Vector2( points[i].x, points[i].z );
 	}
 	
-	var points = getPointLineOffset_1(-0.2, path);	
-	var geom = new THREE.BufferGeometry().setFromPoints(points);	
+	var points_1 = getPointLineOffset_1(-0.2, path);	
+	var geom = new THREE.BufferGeometry().setFromPoints(points_1);	
 	var line = new THREE.Line(geom, new THREE.LineBasicMaterial({color: 0x777777 }));
 	scene.add(line);
 
-	var points = getPointLineOffset_1(0.2, path);	
-	var geom = new THREE.BufferGeometry().setFromPoints(points);	
+	var points_2 = getPointLineOffset_1(0.2, path);	
+	var geom = new THREE.BufferGeometry().setFromPoints(points_2);	
 	var line = new THREE.Line(geom, new THREE.LineBasicMaterial({color: 0x777777 }));
-	scene.add(line);		
+	scene.add(line);
+
+	var points_3 = [];
+	for(var i = 0; i < points_1.length; i++){ points_3[points_3.length] = points_1[i]; }
+	for(var i = points_2.length - 1; i > -1; i--){ points_3[points_3.length] = points_2[i]; }
+	
+	createCurveWall(points_3);
+}
+
+
+
+// создаем кривую стену
+function createCurveWall(points)
+{
+	var p2 = [];
+	
+	for ( var i = 0; i < points.length; i++ ) 
+	{  
+		p2[i] = new THREE.Vector2( points[i].x, points[i].z );		
+	}
+	
+	var shape = new THREE.Shape( p2 );
+	var geometry = new THREE.ExtrudeGeometry( shape, { bevelEnabled: false, depth: -2 } );
+	
+	//var geometry = new THREE.ShapeGeometry( shape );
+	
+	var wall = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color : 0xcccccc, side : THREE.DoubleSide } ) );
+
+	wall.rotation.set( Math.PI / 2, 0, 0 );	
+	
+	scene.add(wall);
 }
 
 
@@ -79,30 +109,25 @@ function getPointLineOffset_1(offset, contour)
 {
 
 	var result = [];
-console.log("offset", offset);
+
 	offset = new THREE.BufferAttribute(new Float32Array([offset, 0, 0]), 3);
-	
-
-		
-console.log("contour.length", contour);
-
 
 
 	for (var i = 0; i < contour.length; i++) 
 	{
 		var v1 = new THREE.Vector2().subVectors(contour[i - 1 < 0 ? contour.length - 1 : i - 1], contour[i]);
 		var v2 = new THREE.Vector2().subVectors(contour[i + 1 == contour.length ? 0 : i + 1], contour[i]);
-		
-		if(i == 20)
-		{
-			v1 = new THREE.Vector2().subVectors(contour[i + 1], contour[i]);
-			v1 = new THREE.Vector2( v1.y, -v1.x ).normalize().add(contour[i]);
+
+		if(i == 0)
+		{			
+			result.push(new THREE.Vector3(contour[i].x, 0, contour[i].y)); 			
+			continue;
 		}
 
-		if(20 == contour.length - 1)
+		if(i == contour.length - 1)
 		{
-			v2 = new THREE.Vector2().subVectors(contour[i], contour[i - 1]);
-			v2 = new THREE.Vector2( v2.y, -v2.x );  console.log(22222, v2);
+			result.push(new THREE.Vector3(contour[i].x, 0, contour[i].y));
+			continue;
 		}			
 		
 		let angle = v2.angle() - v1.angle();
